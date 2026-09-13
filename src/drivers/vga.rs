@@ -1,15 +1,23 @@
+use core::{fmt, ptr::NonNull};
+
 use lazy_static::lazy_static;
 use spin::Mutex;
+use volatile::VolatilePtr;
+
+#[derive(Clone, Copy)]
+#[repr(C)]
+pub struct ScreenChar {
+    pub ascii: u8,
+    pub color: u8,
+}
 
 pub struct VgaWriter {
-    address: *mut u8,
-    ptr: isize,
+    address: VolatilePtr<'static, ScreenChar>,
 }
 
 lazy_static! {
     pub static ref WRITER: Mutex<VgaWriter> = Mutex::new(VgaWriter {
-        address: 0xB8000 as *mut u8,
-        ptr: 0
+        address: unsafe { VolatilePtr::new(NonNull::new_unchecked(0xB8000 as *mut ScreenChar)) },
     });
 }
 
@@ -22,10 +30,14 @@ impl VgaWriter {
 
     pub fn write_byte(&mut self, content: &[u8]) {
         for &byte in content.iter() {
+            self.address.write(ScreenChar {
+                ascii: byte,
+                color: 0xf,
+            });
+
             unsafe {
-                *self.address.offset(self.ptr * 2) = byte;
-                *self.address.offset(self.ptr * 2 + 1) = 0xf;
-                self.ptr += 1;
+                let raw = self.address.as_raw_ptr().add(1);
+                self.address = VolatilePtr::new(raw);
             }
         }
     }
@@ -36,4 +48,9 @@ impl core::fmt::Write for VgaWriter {
         self.write_string(s);
         Ok(())
     }
+}
+
+pub fn print(args: fmt::Arguments) {
+    use core::fmt::Write;
+    WRITER.lock().write_fmt(args).unwrap();
 }

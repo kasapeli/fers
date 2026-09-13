@@ -2,10 +2,9 @@
 #![no_main]
 
 mod drivers;
+mod flib;
 
-use drivers::vga::WRITER;
-
-use core::{fmt::Write, panic::PanicInfo};
+use core::panic::PanicInfo;
 
 #[panic_handler]
 fn panic(_info: &PanicInfo) -> ! {
@@ -14,6 +13,6 @@ fn panic(_info: &PanicInfo) -> ! {
 
 #[unsafe(no_mangle)]
 pub extern "C" fn _start() -> ! {
-    WRITER.lock().write_str("Hello").unwrap();
+    print!("something");
     loop {}
 }

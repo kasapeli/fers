@@ -25,6 +25,10 @@
         defaultPackage = naersk-lib.buildPackage ./.;
         
         devShell = pkgs.mkShell {
+          nativeBuildInputs = with pkgs; [
+            cargo-bootimage
+            qemu
+          ];
           buildInputs = [ 
             rustNightly 
             pkgs.pre-commit 

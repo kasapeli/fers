@@ -1,8 +1,10 @@
 use core::{fmt, ptr::NonNull};
-
 use lazy_static::lazy_static;
 use spin::Mutex;
 use volatile::VolatilePtr;
+
+const BUFFER_HEIGHT: usize = 25;
+const BUFFER_WIDTH: usize = 80;
 
 #[derive(Clone, Copy)]
 #[repr(C)]
@@ -12,12 +14,16 @@ pub struct ScreenChar {
 }
 
 pub struct VgaWriter {
-    address: VolatilePtr<'static, ScreenChar>,
+    column_position: usize,
+    row_position: usize,
+    base_address: NonNull<ScreenChar>,
 }
 
 lazy_static! {
     pub static ref WRITER: Mutex<VgaWriter> = Mutex::new(VgaWriter {
-        address: unsafe { VolatilePtr::new(NonNull::new_unchecked(0xB8000 as *mut ScreenChar)) },
+        column_position: 0,
+        row_position: 0,
+        base_address: unsafe { NonNull::new_unchecked(0xB8000 as *mut ScreenChar) },
     });
 }
 
@@ -30,14 +36,62 @@ impl VgaWriter {
 
     pub fn write_byte(&mut self, content: &[u8]) {
         for &byte in content.iter() {
-            self.address.write(ScreenChar {
-                ascii: byte,
-                color: 0xf,
-            });
+            match byte {
+                b'\n' => self.new_line(),
 
-            unsafe {
-                let raw = self.address.as_raw_ptr().add(1);
-                self.address = VolatilePtr::new(raw);
+                byte => {
+                    if self.column_position >= BUFFER_WIDTH {
+                        self.new_line();
+                    }
+
+                    let offset = (self.row_position * BUFFER_WIDTH) + self.column_position;
+
+                    unsafe {
+                        let raw_ptr = self.base_address.as_ptr().add(offset);
+                        let volatile_ptr = VolatilePtr::new(NonNull::new_unchecked(raw_ptr));
+                        volatile_ptr.write(ScreenChar {
+                            ascii: byte,
+                            color: 0xf,
+                        });
+                    }
+                    self.column_position += 1;
+                }
+            }
+        }
+    }
+
+    fn new_line(&mut self) {
+        self.column_position = 0;
+        if self.row_position < BUFFER_HEIGHT - 1 {
+            self.row_position += 1;
+        } else {
+            self.scroll_up();
+        }
+    }
+
+    fn scroll_up(&mut self) {
+        unsafe {
+            for row in 1..BUFFER_HEIGHT {
+                for col in 0..BUFFER_WIDTH {
+                    let source_offset = (row * BUFFER_WIDTH) + col;
+                    let dest_offset = ((row - 1) * BUFFER_WIDTH) + col;
+
+                    let source_ptr = self.base_address.as_ptr().add(source_offset);
+                    let dest_ptr = self.base_address.as_ptr().add(dest_offset);
+
+                    let val = VolatilePtr::new(NonNull::new_unchecked(source_ptr)).read();
+                    VolatilePtr::new(NonNull::new_unchecked(dest_ptr)).write(val);
+                }
+            }
+
+            let blank = ScreenChar {
+                ascii: b' ',
+                color: 0xf,
+            };
+            for col in 0..BUFFER_WIDTH {
+                let offset = ((BUFFER_HEIGHT - 1) * BUFFER_WIDTH) + col;
+                let ptr = self.base_address.as_ptr().add(offset);
+                VolatilePtr::new(NonNull::new_unchecked(ptr)).write(blank);
             }
         }
     }

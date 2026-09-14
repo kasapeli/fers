@@ -4,9 +4,12 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-bootloader = "0.9"
 spin = "0.12.3"
 volatile = "0.6.1"
+x86_64 = "0.15.5"
+
+[build-dependencies]
+bootloader = "0.9"
 
 [dependencies.lazy_static]
 version = "1.0"

@@ -17,7 +17,7 @@ fn panic(_info: &PanicInfo) -> ! {
 
 #[unsafe(no_mangle)]
 pub extern "C" fn _start() -> ! {
-    print!("something");
+    println!("something");
     init();
     instructions::interrupts::int3();
     loop {}

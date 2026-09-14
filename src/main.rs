@@ -6,19 +6,27 @@ mod arch;
 mod drivers;
 mod flib;
 
-use crate::arch::x86_64::idt::init;
+use crate::arch::x86_64::{gdt, idt};
 use core::panic::PanicInfo;
-use x86_64::{self, instructions};
 
 #[panic_handler]
-fn panic(_info: &PanicInfo) -> ! {
+fn panic(info: &PanicInfo) -> ! {
+    println!("{}", info);
     loop {}
 }
 
 #[unsafe(no_mangle)]
 pub extern "C" fn _start() -> ! {
     println!("something");
-    init();
-    instructions::interrupts::int3();
+
+    gdt::init();
+    idt::init();
+
+    fn stack_overflow() {
+        stack_overflow();
+    }
+
+    stack_overflow();
+
     loop {}
 }

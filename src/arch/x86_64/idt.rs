@@ -1,7 +1,7 @@
-use crate::print;
+use crate::{flib::hlt, print, println};
 use lazy_static::lazy_static;
 use pic8259::ChainedPics;
-use x86_64::structures::idt::{InterruptDescriptorTable, InterruptStackFrame};
+use x86_64::structures::idt::{InterruptDescriptorTable, InterruptStackFrame, PageFaultErrorCode};
 
 use crate::arch::x86_64::gdt;
 
@@ -21,6 +21,7 @@ lazy_static! {
                 .set_handler_fn(df_handler)
                 .set_stack_index(gdt::DF_IST)
         };
+        idt.page_fault.set_handler_fn(page_fault_handler);
         idt[InterruptIndex::Timer.as_u8()].set_handler_fn(timer_interrupt_handler);
         idt[InterruptIndex::Keyboard.as_u8()].set_handler_fn(keyboard_handler);
         idt
@@ -53,6 +54,20 @@ pub extern "x86-interrupt" fn df_handler(stack_frame: InterruptStackFrame, code:
         "EXCEPTION: DOUBLE FAULT\n{:#?}\nCode: {}",
         stack_frame, code
     );
+}
+
+pub extern "x86-interrupt" fn page_fault_handler(
+    stack_frame: InterruptStackFrame,
+    code: PageFaultErrorCode,
+) {
+    use x86_64::registers::control::Cr2;
+    println!(
+        "EXCEPTION: PAGE FAULT\nAccessed Address: {:?}\nError Code: {:#?}\nStack Frame: {:#?}",
+        Cr2::read(),
+        code,
+        stack_frame
+    );
+    hlt::exec();
 }
 
 pub extern "x86-interrupt" fn timer_interrupt_handler(_stack_frame: InterruptStackFrame) {

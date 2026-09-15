@@ -2,3 +2,8 @@
 id = 1
 task_name = "handle hardware interrupts"
 completion = true
+
+[[task]]
+id = 2
+task_name = "implement paging"
+completion = false

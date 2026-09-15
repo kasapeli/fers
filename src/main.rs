@@ -6,10 +6,12 @@ mod arch;
 mod drivers;
 mod flib;
 mod memory;
+mod utils;
 
 use crate::{
     arch::x86_64::{gdt, idt},
     flib::hlt,
+    utils::fsh,
 };
 
 use bootloader::{BootInfo, entry_point};
@@ -39,6 +41,8 @@ fn kernel(boot_info: &'static BootInfo) -> ! {
 
     unsafe { idt::PICS.lock().initialize() };
     x86_64::instructions::interrupts::enable();
+
+    fsh::init();
 
     hlt::exec();
 }

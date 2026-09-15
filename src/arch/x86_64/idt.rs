@@ -1,9 +1,16 @@
+extern crate alloc;
+
 use crate::{flib::hlt, print, println};
+use alloc::string::String;
 use lazy_static::lazy_static;
 use pic8259::ChainedPics;
 use x86_64::structures::idt::{InterruptDescriptorTable, InterruptStackFrame, PageFaultErrorCode};
 
 use crate::arch::x86_64::gdt;
+
+lazy_static! {
+    pub static ref INPUT: spin::Mutex<String> = spin::Mutex::new(String::new());
+}
 
 // pic
 pub const PIC_1_OFFSET: u8 = 32;
@@ -95,7 +102,10 @@ pub extern "x86-interrupt" fn keyboard_handler(_stack_frame: InterruptStackFrame
     if let Ok(Some(key_event)) = keyboard.add_byte(scancode) {
         if let Some(key) = keyboard.process_keyevent(key_event) {
             match key {
-                DecodedKey::Unicode(char) => print!("{char}"),
+                DecodedKey::Unicode(char) => {
+                    INPUT.lock().push(char);
+                    print!("{char}");
+                }
                 DecodedKey::RawKey(key) => print!("{:#?}", key),
             }
         }

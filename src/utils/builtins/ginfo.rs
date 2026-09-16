@@ -3,7 +3,7 @@ use crate::println;
 
 pub fn handle(content: &[&str]) {
     if content.len() == 1 {
-        println!("fern 0.1");
+        println!("fers 0.1");
     } else {
         match content[1] {
             "-s" => {
@@ -25,7 +25,7 @@ pub fn handle(content: &[&str]) {
 pub fn specific_info(entry: &str) {
     match entry {
         "kernel" => {
-            println!("fern 0.1");
+            println!("fers 0.1");
         }
         _ => {
             println!("{}", invalid());

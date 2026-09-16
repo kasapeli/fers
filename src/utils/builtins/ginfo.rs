@@ -1,3 +1,4 @@
+use super::presets::arg_err::*;
 use crate::println;
 
 pub fn handle(content: &[&str]) {
@@ -7,15 +8,15 @@ pub fn handle(content: &[&str]) {
         match content[1] {
             "-s" => {
                 if content[2..].is_empty() {
-                    println!("no argument provided");
+                    println!("{}", missing(1));
                 } else if content.len() >= 4 {
-                    println!("too many arguments provided");
+                    println!("{}", exceed(1));
                 } else {
                     specific_info(content[2]);
                 }
             }
             _ => {
-                println!("unknown flag");
+                println!("{}", invalid());
             }
         }
     }
@@ -27,7 +28,7 @@ pub fn specific_info(entry: &str) {
             println!("fern 0.1");
         }
         _ => {
-            println!("unknown entry");
+            println!("{}", invalid());
         }
     }
 }

@@ -45,7 +45,6 @@ fn kernel(boot_info: &'static BootInfo) -> ! {
     println!("Allocator initialized");
 
     unsafe { idt::PICS.lock().initialize() };
-    x86_64::instructions::interrupts::enable();
 
-    fsh::init(); // bug here
+    fsh::init();
 }

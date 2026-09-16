@@ -12,3 +12,8 @@ completion = true
 id = 3
 task_name = "fix holding enter being faster than the prompt can appear"
 completion = false
+
+[[task]]
+id = 4
+task_name = "handle backspace"
+completion = false

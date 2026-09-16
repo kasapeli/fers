@@ -5,8 +5,6 @@ use lazy_static::lazy_static;
 use spin::Mutex;
 use volatile::VolatilePtr;
 
-use crate::println;
-
 const BUFFER_HEIGHT: usize = 25;
 const BUFFER_WIDTH: usize = 80;
 

@@ -10,7 +10,7 @@ mod utils;
 
 use crate::{
     arch::x86_64::{gdt, idt},
-    flib::hlt,
+    flib::{hlt, kpanic},
     utils::fsh,
 };
 
@@ -20,7 +20,7 @@ use x86_64::{self, VirtAddr};
 
 #[panic_handler]
 fn panic(info: &PanicInfo) -> ! {
-    println!("{}", info);
+    kpanic::panic(info);
 
     hlt::exec();
 }

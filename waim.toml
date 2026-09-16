@@ -6,4 +6,9 @@ completion = true
 [[task]]
 id = 2
 task_name = "implement paging"
+completion = true
+
+[[task]]
+id = 3
+task_name = "fix holding enter being faster than the prompt can appear"
 completion = false

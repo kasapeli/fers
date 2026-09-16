@@ -11,12 +11,12 @@ completion = true
 [[task]]
 id = 3
 task_name = "fix holding enter being faster than the prompt can appear"
-completion = false
+completion = true
 
 [[task]]
 id = 4
 task_name = "handle backspace"
-completion = false
+completion = true
 
 [[task]]
 id = 5

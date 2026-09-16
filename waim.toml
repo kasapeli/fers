@@ -17,3 +17,8 @@ completion = false
 id = 4
 task_name = "handle backspace"
 completion = false
+
+[[task]]
+id = 5
+task_name = "fix deadlock on typing stuff before it fully boots up"
+completion = false

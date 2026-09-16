@@ -8,7 +8,8 @@ Try it:
 ```bash
 git clone https://www.github.com/kasapeli/fers.git (git@github.com:kasapeli/fers.git over ssh)
 cd fers
+cargo install bootimage
 cargo run
 ```
 
-Make sure you have Rust Nightly.
+Make sure you have Rust Nightly, or just use the flake.

@@ -15,7 +15,6 @@ use crate::{
 };
 
 use bootloader::{BootInfo, entry_point};
-use core::arch::asm;
 use core::panic::PanicInfo;
 use x86_64::instructions::interrupts::disable;
 use x86_64::{self, VirtAddr};

@@ -6,6 +6,11 @@ use crate::{print, println};
 use alloc::{str, string::String, vec::Vec};
 
 pub fn init() -> ! {
+    x86_64::instructions::interrupts::enable();
+    main();
+}
+
+pub fn main() -> ! {
     print!("> ");
 
     loop {

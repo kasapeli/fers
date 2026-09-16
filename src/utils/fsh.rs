@@ -63,6 +63,9 @@ fn parse(content: Vec<&str>) {
                 x86_64::instructions::port::Port::<u8>::new(0x64).write(0xFE);
             }
         }
+        "panic" => {
+            panic!("intentional panic");
+        }
         _ => {
             println!("fsh: command not found: {}", cmd);
         }

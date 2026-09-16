@@ -13,26 +13,41 @@ pub fn init() -> ! {
 pub fn main() -> ! {
     print!("> ");
 
+    let mut current_line = String::new();
+
     loop {
-        let mut command_line = String::new();
-        let mut has_command = false; // consider replacing
+        let mut new_chars = String::new();
 
         x86_64::instructions::interrupts::without_interrupts(|| {
             let mut content = INPUT.lock();
-
-            if content.contains('\n') || content.contains('\r') {
-                command_line = content.clone();
+            if !content.is_empty() {
+                new_chars = content.clone();
                 content.clear();
-                has_command = true; // consider replacing
             }
         });
 
-        if has_command {
-            let content: Vec<&str> = command_line.trim().split_whitespace().collect();
+        for c in new_chars.chars() {
+            match c {
+                '\n' | '\r' => {
+                    println!();
 
-            parse(content);
+                    let content: Vec<&str> = current_line.trim().split_whitespace().collect();
+                    parse(content);
 
-            print!("> ");
+                    current_line.clear();
+                    print!("> ");
+                }
+                '\x08' => {
+                    if !current_line.is_empty() {
+                        current_line.pop();
+                        print!("{}", '\x08');
+                    }
+                }
+                _ => {
+                    current_line.push(c);
+                    print!("{c}");
+                }
+            }
         }
 
         x86_64::instructions::hlt();

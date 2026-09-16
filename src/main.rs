@@ -44,6 +44,8 @@ fn kernel(boot_info: &'static BootInfo) -> ! {
     memory::ll_alloc::init_heap(&mut mapper, &mut frame_allocator).expect("h");
     println!("Allocator initialized");
 
+    println!("Welcome to Fern!");
+
     unsafe { idt::PICS.lock().initialize() };
 
     fsh::init();

@@ -1,7 +1,7 @@
 extern crate alloc;
 
 use crate::drivers::keyboard::INPUT;
-use crate::utils::builtins::echo;
+use crate::utils::builtins::*;
 use crate::{print, println};
 use alloc::{str, string::String, vec::Vec};
 
@@ -50,6 +50,9 @@ fn parse(content: Vec<&str>) {
     match cmd {
         "echo" => {
             echo::default(args);
+        }
+        "help" => {
+            help::handle(&content);
         }
         "reboot" => {
             println!("Rebooting...");

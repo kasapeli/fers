@@ -4,8 +4,6 @@ use alloc::string::String;
 use lazy_static::lazy_static;
 use x86_64::structures::idt::InterruptStackFrame;
 
-use crate::print;
-
 use crate::arch::x86_64::idt::{InterruptIndex, PICS};
 
 lazy_static! {
@@ -32,7 +30,6 @@ pub extern "x86-interrupt" fn keyboard_handler(_stack_frame: InterruptStackFrame
             match key {
                 DecodedKey::Unicode(char) => {
                     INPUT.lock().push(char);
-                    print!("{char}");
                 }
                 DecodedKey::RawKey(_key) => {}
             }

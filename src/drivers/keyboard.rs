@@ -34,7 +34,7 @@ pub extern "x86-interrupt" fn keyboard_handler(_stack_frame: InterruptStackFrame
                     INPUT.lock().push(char);
                     print!("{char}");
                 }
-                DecodedKey::RawKey(key) => print!("{:#?}", key),
+                DecodedKey::RawKey(_key) => {}
             }
         }
     }

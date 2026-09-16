@@ -21,6 +21,7 @@ pub struct VgaWriter {
     column_position: usize,
     row_position: usize,
     base_address: NonNull<ScreenChar>,
+    pub current_color: u8,
 }
 
 lazy_static! {
@@ -28,6 +29,7 @@ lazy_static! {
         column_position: 0,
         row_position: 0,
         base_address: unsafe { NonNull::new_unchecked(0xB8000 as *mut ScreenChar) },
+        current_color: 0xf,
     });
 }
 
@@ -55,7 +57,7 @@ impl VgaWriter {
                         let volatile_ptr = VolatilePtr::new(NonNull::new_unchecked(raw_ptr));
                         volatile_ptr.write(ScreenChar {
                             ascii: byte,
-                            color: 0xf,
+                            color: self.current_color,
                         });
                     }
                     self.column_position += 1;
@@ -103,7 +105,7 @@ impl VgaWriter {
     pub fn clear(&mut self) {
         let blank = ScreenChar {
             ascii: b' ',
-            color: 0xf,
+            color: self.current_color,
         };
 
         for row in 0..BUFFER_HEIGHT {
@@ -122,9 +124,11 @@ impl VgaWriter {
     }
 
     pub fn kpanic(&mut self, msg: &PanicInfo) {
+        self.current_color = 0xcf;
+
         let blank = ScreenChar {
             ascii: b' ',
-            color: 0xb,
+            color: self.current_color,
         };
 
         for row in 0..BUFFER_HEIGHT {
@@ -136,12 +140,12 @@ impl VgaWriter {
                     volatile_ptr.write(blank);
                 }
             }
-
-            self.column_position = 0;
-            self.row_position = 0;
         }
 
-        println!("{}", msg);
+        self.column_position = 0;
+        self.row_position = 0;
+
+        let _ = core::fmt::write(self, format_args!("{}", msg));
     }
 }
 

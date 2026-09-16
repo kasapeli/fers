@@ -57,6 +57,9 @@ fn parse(content: Vec<&str>) {
         "clear" => {
             clear::exec();
         }
+        "ginfo" => {
+            ginfo::handle(&content);
+        }
         "reboot" => {
             println!("Rebooting...");
             unsafe {

@@ -23,11 +23,11 @@ pub unsafe fn l4_tab(phy_mem_offset: VirtAddr) -> &'static mut PageTable {
     unsafe { &mut *page_table_ptr }
 }
 
-pub unsafe fn translate_addr(addr: VirtAddr, phy_mem_offset: VirtAddr) -> Option<PhysAddr> {
-    translate_addr_inner(addr, phy_mem_offset)
+pub unsafe fn _translate_addr(addr: VirtAddr, phy_mem_offset: VirtAddr) -> Option<PhysAddr> {
+    _translate_addr_inner(addr, phy_mem_offset)
 }
 
-fn translate_addr_inner(addr: VirtAddr, phy_mem_offset: VirtAddr) -> Option<PhysAddr> {
+fn _translate_addr_inner(addr: VirtAddr, phy_mem_offset: VirtAddr) -> Option<PhysAddr> {
     use x86_64::registers::control::Cr3;
     use x86_64::structures::paging::page_table::FrameError;
 

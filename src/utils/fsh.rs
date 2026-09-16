@@ -1,6 +1,7 @@
 extern crate alloc;
 
 use crate::idt::INPUT;
+use crate::utils::builtins::echo;
 use crate::{print, println};
 use alloc::{str, string::String, vec::Vec};
 
@@ -9,7 +10,7 @@ pub fn init() -> ! {
 
     loop {
         let mut command_line = String::new();
-        let mut has_command = false;
+        let mut has_command = false; // consider replacing
 
         x86_64::instructions::interrupts::without_interrupts(|| {
             let mut content = INPUT.lock();
@@ -17,13 +18,12 @@ pub fn init() -> ! {
             if content.contains('\n') || content.contains('\r') {
                 command_line = content.clone();
                 content.clear();
-                has_command = true;
+                has_command = true; // consider replacing
             }
         });
 
         if has_command {
-            let trimmed = command_line.trim();
-            let content: Vec<&str> = trimmed.split_whitespace().collect();
+            let content: Vec<&str> = command_line.trim().split_whitespace().collect();
 
             parse(content);
 
@@ -44,8 +44,7 @@ fn parse(content: Vec<&str>) {
 
     match cmd {
         "echo" => {
-            let msg = args.join(" ");
-            println!("{msg}");
+            echo::default(args);
         }
         "reboot" => {
             println!("Rebooting...");

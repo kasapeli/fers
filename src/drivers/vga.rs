@@ -1,7 +1,11 @@
-use core::{fmt, ptr::NonNull};
+extern crate alloc;
+
+use core::{fmt, panic::PanicInfo, ptr::NonNull};
 use lazy_static::lazy_static;
 use spin::Mutex;
 use volatile::VolatilePtr;
+
+use crate::println;
 
 const BUFFER_HEIGHT: usize = 25;
 const BUFFER_WIDTH: usize = 80;
@@ -94,6 +98,50 @@ impl VgaWriter {
                 VolatilePtr::new(NonNull::new_unchecked(ptr)).write(blank);
             }
         }
+    }
+
+    pub fn clear(&mut self) {
+        let blank = ScreenChar {
+            ascii: b' ',
+            color: 0xf,
+        };
+
+        for row in 0..BUFFER_HEIGHT {
+            for col in 0..BUFFER_WIDTH {
+                let offset = (row * BUFFER_WIDTH) + col;
+                unsafe {
+                    let raw_ptr = self.base_address.as_ptr().add(offset);
+                    let volatile_ptr = VolatilePtr::new(NonNull::new_unchecked(raw_ptr));
+                    volatile_ptr.write(blank);
+                }
+            }
+
+            self.column_position = 0;
+            self.row_position = 0;
+        }
+    }
+
+    pub fn kpanic(&mut self, msg: &PanicInfo) {
+        let blank = ScreenChar {
+            ascii: b' ',
+            color: 0xb,
+        };
+
+        for row in 0..BUFFER_HEIGHT {
+            for col in 0..BUFFER_WIDTH {
+                let offset = (row * BUFFER_WIDTH) + col;
+                unsafe {
+                    let raw_ptr = self.base_address.as_ptr().add(offset);
+                    let volatile_ptr = VolatilePtr::new(NonNull::new_unchecked(raw_ptr));
+                    volatile_ptr.write(blank);
+                }
+            }
+
+            self.column_position = 0;
+            self.row_position = 0;
+        }
+
+        println!("{}", msg);
     }
 }
 

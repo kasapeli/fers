@@ -54,6 +54,9 @@ fn parse(content: Vec<&str>) {
         "help" => {
             help::handle(&content);
         }
+        "clear" => {
+            clear::exec();
+        }
         "reboot" => {
             println!("Rebooting...");
             unsafe {

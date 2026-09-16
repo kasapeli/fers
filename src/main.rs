@@ -43,6 +43,4 @@ fn kernel(boot_info: &'static BootInfo) -> ! {
     x86_64::instructions::interrupts::enable();
 
     fsh::init();
-
-    hlt::exec();
 }

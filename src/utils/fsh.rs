@@ -1,6 +1,6 @@
 extern crate alloc;
 
-use crate::idt::INPUT;
+use crate::drivers::keyboard::INPUT;
 use crate::utils::builtins::echo;
 use crate::{print, println};
 use alloc::{str, string::String, vec::Vec};

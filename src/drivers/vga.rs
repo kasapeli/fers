@@ -43,6 +43,25 @@ impl VgaWriter {
             match byte {
                 b'\n' => self.new_line(),
 
+                0x08 => {
+                    if self.column_position > 0 {
+                        self.column_position -= 1;
+                    } else if self.row_position > 0 {
+                        self.row_position -= 1;
+                        self.column_position = BUFFER_WIDTH - 1;
+                    }
+
+                    let offset = (self.row_position * BUFFER_WIDTH) + self.column_position;
+                    unsafe {
+                        let raw_ptr = self.base_address.as_ptr().add(offset);
+                        let volatile_ptr = VolatilePtr::new(NonNull::new_unchecked(raw_ptr));
+                        volatile_ptr.write(ScreenChar {
+                            ascii: b' ',
+                            color: self.current_color,
+                        });
+                    }
+                }
+
                 byte => {
                     if self.column_position >= BUFFER_WIDTH {
                         self.new_line();

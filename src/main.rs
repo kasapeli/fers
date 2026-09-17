@@ -52,7 +52,7 @@ fn kernel(boot_info: &'static BootInfo) -> ! {
     memory::ll_alloc::init_heap(&mut mapper, &mut frame_allocator).expect("h");
     println!("Heap initialized");
 
-    println!("Welcome to Fern!");
+    println!("Welcome to Fers!");
 
     fsh::init();
 }

@@ -141,7 +141,7 @@ impl VgaWriter {
     }
 
     pub fn kpanic(&mut self, msg: &PanicInfo) {
-        self.current_color = 0xcf;
+        self.current_color = 0x4F;
 
         let blank = ScreenChar {
             ascii: b' ',

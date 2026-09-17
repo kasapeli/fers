@@ -81,6 +81,9 @@ fn parse(content: Vec<&str>) {
         "poke" => {
             poke::handle(&content);
         }
+        "peek" => {
+            peek::handle(&content);
+        }
         "reboot" => {
             println!("Rebooting...");
             unsafe {

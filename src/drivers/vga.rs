@@ -162,6 +162,7 @@ impl VgaWriter {
         self.column_position = 0;
         self.row_position = 0;
 
+        let _ = core::fmt::write(self, format_args!("!!! KERNEL PANIC !!!\n\n"));
         let _ = core::fmt::write(self, format_args!("{}", msg));
     }
 }

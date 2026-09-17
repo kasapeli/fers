@@ -4,20 +4,20 @@ use x86_64::instructions::port::Port;
 
 use crate::println;
 
-pub fn fetch_time(format: Option<&str>) {
+pub fn fetch_time(format: &str) {
     // consider returning u8 instead later
     match format {
-        Some("s") => unsafe {
+        "s" => unsafe {
             Port::<u8>::new(0x70).write(0x00);
             let second = Port::<u8>::new(0x71).read();
             println!("{}", second);
         },
-        Some("m") => unsafe {
+        "m" => unsafe {
             Port::<u8>::new(0x70).write(0x02);
             let minute = Port::<u8>::new(0x71).read();
             println!("{}", minute);
         },
-        Some("h") => unsafe {
+        "h" => unsafe {
             Port::<u8>::new(0x70).write(0x04);
             let hour = Port::<u8>::new(0x71).read();
             println!("{}", hour);

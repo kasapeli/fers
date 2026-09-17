@@ -4,28 +4,26 @@ use core::ptr::NonNull;
 use volatile;
 
 pub fn handle(content: &[&str]) {
-    if content.len() == 1 {
-        println!("{}", missing(2));
-        return;
-    } else if content.len() == 2 {
-        println!("{}", missing(2));
-        return;
-    } else if content.len() > 3 {
+    if content.len() > 3 {
         println!("{}", exceed(2));
+    } else if content.len() < 2 {
+        println!("{}", missing(2));
+    }
+
+    if !content[1].starts_with("0x") {
+        println!("invalid address");
+        return;
     }
 
     let addr = usize::from_str_radix(content[1].trim_start_matches("0x"), 16)
         .expect("failed to parse address");
-    let ptr = addr as *mut usize; // TODO: reject stuff not starting in 0x
 
     let value = content[2];
 
-    unsafe {
-        write(ptr, value);
-    }
+    write(addr, value);
 }
 
-pub unsafe fn write<T>(address: *mut usize, content: T)
+pub fn write<T>(address: usize, content: T)
 where
     T: Copy,
 {

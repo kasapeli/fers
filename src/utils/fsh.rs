@@ -11,7 +11,7 @@ pub fn init() -> ! {
 }
 
 pub fn main() -> ! {
-    print!("> ");
+    print!("fsh> ");
 
     let mut current_line = String::new();
 
@@ -35,7 +35,7 @@ pub fn main() -> ! {
                     parse(content);
 
                     current_line.clear();
-                    print!("> ");
+                    print!("fsh> ");
                 }
                 '\x08' => {
                     if !current_line.is_empty() {

@@ -73,6 +73,19 @@ pub fn verbose_help(entry: &str) {
 
             println!("{}", table.make());
         }
+        "time" => {
+            let table = HelpTable {
+                name: "help".to_string(),
+                info: "shows the time".to_string(),
+                flags: alloc::vec![
+                    "-h: hour".to_string(),
+                    "-m: minute".to_string(),
+                    "-s: second".to_string()
+                ], // TODO: get rid of .to_string() slop
+            };
+
+            println!("{}", table.make());
+        }
         _ => {
             println!("{}", invalid());
         }

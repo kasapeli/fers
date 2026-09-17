@@ -6,7 +6,7 @@ use alloc::string::ToString;
 
 pub fn handle(content: &[&str]) {
     if content.len() == 1 {
-        println!("help, echo, reboot, ginfo, clear, panic");
+        println!("help, echo, reboot, ginfo, clear, panic, time");
         println!("help -v <option> for verbose help");
     } else {
         match content[1] {

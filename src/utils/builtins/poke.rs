@@ -14,8 +14,9 @@ pub fn handle(content: &[&str]) {
         println!("{}", exceed(2));
     }
 
-    let addr = usize::from_str_radix(content[1].trim_start_matches("0x"), 16).expect("fail");
-    let ptr = addr as *mut usize;
+    let addr = usize::from_str_radix(content[1].trim_start_matches("0x"), 16)
+        .expect("failed to parse address");
+    let ptr = addr as *mut usize; // TODO: reject stuff not starting in 0x
 
     let value = content[2];
 

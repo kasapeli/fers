@@ -78,9 +78,9 @@ fn parse(content: Vec<&str>) {
         "time" => {
             time::exec(&content);
         }
-        // "poke" => {
-        //     poke::handle(&content);
-        // }
+        "poke" => {
+            poke::handle(&content);
+        }
         "reboot" => {
             println!("Rebooting...");
             unsafe {

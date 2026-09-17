@@ -3,3 +3,4 @@ pub mod echo;
 pub mod ginfo;
 pub mod help;
 pub mod presets;
+pub mod time;

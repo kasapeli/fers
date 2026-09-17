@@ -36,23 +36,23 @@ fn kernel(boot_info: &'static BootInfo) -> ! {
     disable();
 
     gdt::init();
-    println!("GDT initialized");
+    println!("GDT: OK");
 
     idt::init();
-    println!("IDT intialized");
+    println!("IDT: OK");
 
     unsafe { idt::PICS.lock().initialize() };
-    println!("PICS initialized");
+    println!("PICs: OK");
 
     let phy_mem_offset = VirtAddr::new(boot_info.physical_memory_offset);
     let mut mapper = unsafe { memory::pager::init(phy_mem_offset) };
     let mut frame_allocator = unsafe { BootInfoFrameAllocator::init(&boot_info.memory_map) };
-    println!("Memory mapped");
+    println!("Memory mapping: OK");
 
     memory::ll_alloc::init_heap(&mut mapper, &mut frame_allocator).expect("h");
-    println!("Heap initialized");
+    println!("Heap: OK");
 
-    println!("Welcome to Fers!");
+    println!("\nWelcome to Fers!");
 
     fsh::init();
 }

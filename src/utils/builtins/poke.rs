@@ -6,8 +6,10 @@ use volatile;
 pub fn handle(content: &[&str]) {
     if content.len() > 3 {
         println!("{}", exceed(2));
+        return;
     } else if content.len() < 2 {
         println!("{}", missing(2));
+        return;
     }
 
     if !content[1].starts_with("0x") {

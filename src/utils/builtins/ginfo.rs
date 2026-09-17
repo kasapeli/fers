@@ -1,4 +1,5 @@
 use super::presets::arg_err::*;
+use crate::memory::ll_alloc::HEAP_SIZE;
 use crate::println;
 
 pub fn handle(content: &[&str]) {
@@ -30,6 +31,9 @@ pub fn specific_info(entry: &str) {
         }
         "shell" => {
             println!("fers shell 0.1");
+        }
+        "heap" | "memory" | "mem" => {
+            println!("{}", HEAP_SIZE);
         }
         _ => {
             println!("{}", invalid());

@@ -77,7 +77,7 @@ pub fn verbose_help(entry: &str) {
         }
         "time" => {
             let table = HelpTable {
-                name: "help".to_string(),
+                name: "time".to_string(),
                 info: "shows the time".to_string(),
                 flags: alloc::vec![
                     "-h: hour".to_string(),

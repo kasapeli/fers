@@ -75,6 +75,9 @@ fn parse(content: Vec<&str>) {
         "ginfo" => {
             ginfo::handle(&content);
         }
+        "time" => {
+            time::exec(&content);
+        }
         "reboot" => {
             println!("Rebooting...");
             unsafe {

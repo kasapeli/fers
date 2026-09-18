@@ -7,6 +7,9 @@ pub fn handle(content: &[&str]) {
     if content.len() > 2 {
         println!("{}", exceed(1));
         return;
+    } else if content.len() < 2 {
+        println!("{}", missing(1));
+        return;
     }
 
     if !content[1].starts_with("0x") {

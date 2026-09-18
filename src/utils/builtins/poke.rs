@@ -7,7 +7,7 @@ pub fn handle(content: &[&str]) {
     if content.len() > 3 {
         println!("{}", exceed(2));
         return;
-    } else if content.len() < 2 {
+    } else if content.len() < 3 {
         println!("{}", missing(2));
         return;
     }

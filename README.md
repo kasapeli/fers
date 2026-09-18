@@ -13,3 +13,5 @@ cargo run
 ```
 
 Make sure you have Rust Nightly, or just use the flake.
+
+## License: [MIT](LICENSE)

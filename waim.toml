@@ -22,3 +22,8 @@ completion = true
 id = 5
 task_name = "fix deadlock on typing stuff before it fully boots up"
 completion = false
+
+[[task]]
+id = 6
+task_name = "make docs (probably never)"
+completion = false

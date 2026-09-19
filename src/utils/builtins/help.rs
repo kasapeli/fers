@@ -69,7 +69,8 @@ pub fn verbose_help(entry: &str) {
                 name: "ginfo".to_string(),
                 info: "fetches general info about the system".to_string(),
                 flags: alloc::vec![
-                    "-s: shows specific help (options: kernel, shell, mem|memory|heap)".to_string()
+                    "-s: shows specific help (options: kernel, shell, mem|memory|heap, cpu)"
+                        .to_string()
                 ],
             };
 

@@ -5,4 +5,5 @@ pub mod help;
 pub mod peek;
 pub mod poke;
 pub mod presets;
+pub mod shed;
 pub mod time;

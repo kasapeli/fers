@@ -1,6 +1,6 @@
 extern crate alloc;
 
-use crate::drivers::keyboard::INPUT;
+use crate::drivers::keyboard::read_line;
 use crate::utils::builtins::*;
 use crate::{print, println};
 use alloc::{str, string::String, vec::Vec};
@@ -11,55 +11,23 @@ pub fn init() -> ! {
 }
 
 pub fn main() -> ! {
-    print!("fsh> ");
-
-    let mut current_line = String::new();
-
     loop {
-        let mut new_chars = String::new();
+        print!("fsh> ");
 
-        x86_64::instructions::interrupts::without_interrupts(|| {
-            let mut content = INPUT.lock();
-            if !content.is_empty() {
-                new_chars = content.clone();
-                content.clear();
-            }
-        });
+        let content = read_line();
 
-        for c in new_chars.chars() {
-            match c {
-                '\n' | '\r' => {
-                    println!();
-
-                    let content: Vec<&str> = current_line.trim().split_whitespace().collect();
-                    parse(content);
-
-                    current_line.clear();
-                    print!("fsh> ");
-                }
-                '\x08' => {
-                    if !current_line.is_empty() {
-                        current_line.pop();
-                        print!("{}", '\x08');
-                    }
-                }
-                _ => {
-                    current_line.push(c);
-                    print!("{c}");
-                }
-            }
-        }
-
-        x86_64::instructions::hlt();
+        parse(content);
     }
 }
 
-fn parse(content: Vec<&str>) {
+fn parse(ctent: String) {
+    let content: Vec<&str> = ctent.trim().split_whitespace().collect();
+
     if content.is_empty() {
         return;
     }
 
-    let cmd = content[0];
+    let cmd = content[0]; // kind of a useless split tbh
     let args = &content[1..];
 
     match cmd {
@@ -83,6 +51,9 @@ fn parse(content: Vec<&str>) {
         }
         "peek" => {
             peek::handle(&content);
+        }
+        "shed" | "editor" => {
+            shed::mloop();
         }
         "reboot" => {
             println!("Rebooting...");

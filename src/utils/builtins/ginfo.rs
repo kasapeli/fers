@@ -1,3 +1,5 @@
+use raw_cpuid::CpuId;
+
 use super::presets::arg_err::*;
 use crate::memory::ll_alloc::HEAP_SIZE;
 use crate::println;
@@ -34,6 +36,14 @@ pub fn specific_info(entry: &str) {
         }
         "heap" | "memory" | "mem" => {
             println!("{}", HEAP_SIZE);
+        }
+        "cpu" => {
+            let cpuid = CpuId::new();
+
+            if let Some(b) = cpuid.get_processor_brand_string() {
+                let brand = b.as_str();
+                println!("{}", brand);
+            }
         }
         _ => {
             println!("{}", invalid());

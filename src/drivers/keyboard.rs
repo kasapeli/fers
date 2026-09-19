@@ -1,5 +1,6 @@
 extern crate alloc;
 
+use crate::print;
 use alloc::string::String;
 use lazy_static::lazy_static;
 use x86_64::structures::idt::InterruptStackFrame;
@@ -25,11 +26,20 @@ pub extern "x86-interrupt" fn keyboard_handler(_stack_frame: InterruptStackFrame
     let mut port: Port<u8> = Port::new(0x60);
 
     let scancode: u8 = unsafe { port.read() };
+
     if let Ok(Some(key_event)) = keyboard.add_byte(scancode) {
         if let Some(key) = keyboard.process_keyevent(key_event) {
             match key {
-                DecodedKey::Unicode(char) => {
-                    INPUT.lock().push(char);
+                DecodedKey::Unicode(character) => {
+                    if character == '\x08' {
+                        if !INPUT.lock().is_empty() {
+                            INPUT.lock().push(character);
+                            print!("{}", character);
+                        }
+                    } else {
+                        INPUT.lock().push(character);
+                        print!("{}", character);
+                    }
                 }
                 DecodedKey::RawKey(_key) => {}
             }
@@ -39,5 +49,39 @@ pub extern "x86-interrupt" fn keyboard_handler(_stack_frame: InterruptStackFrame
     unsafe {
         PICS.lock()
             .notify_end_of_interrupt(InterruptIndex::Keyboard.as_u8());
+    }
+}
+
+pub fn read_line() -> String {
+    loop {
+        let mut input = INPUT.lock();
+
+        while let Some(backspace_pos) = input.find('\x08') {
+            if backspace_pos > 0 {
+                input.remove(backspace_pos);
+                input.remove(backspace_pos - 1);
+            } else {
+                input.remove(0);
+            }
+        }
+
+        if let Some(pos) = input.find('\n') {
+            let mut line = input.split_off(pos + 1);
+
+            core::mem::swap(&mut *input, &mut line);
+
+            if line.ends_with('\n') {
+                line.pop();
+            }
+            if line.ends_with('\r') {
+                line.pop();
+            }
+
+            return line;
+        }
+
+        drop(input);
+
+        x86_64::instructions::hlt();
     }
 }

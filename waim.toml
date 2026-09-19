@@ -32,3 +32,8 @@ completion = false
 id = 7
 task_name = "implement fs"
 completion = false
+
+[[task]]
+id = 8
+task_name = "add saving/loading to shed (requires fs too)"
+completion = false

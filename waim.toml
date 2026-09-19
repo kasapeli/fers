@@ -27,3 +27,8 @@ completion = false
 id = 6
 task_name = "make docs (probably never)"
 completion = false
+
+[[task]]
+id = 7
+task_name = "implement fs"
+completion = false

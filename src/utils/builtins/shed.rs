@@ -6,7 +6,7 @@ use alloc::{
 };
 
 use super::presets::arg_err::*;
-use crate::{drivers::keyboard::read_line, print, println};
+use crate::{flib::read_line::read_string, print, println};
 
 pub struct Editor {
     storage: Vec<String>,
@@ -109,7 +109,7 @@ pub fn mloop() {
 
     loop {
         let mut input = String::new();
-        let read = read_line();
+        let read = read_string();
         input.push_str(&read);
 
         match input.as_str() {
@@ -126,7 +126,7 @@ pub fn cmd(editor: &mut Editor) {
     loop {
         print!("> ");
         let mut cmd = String::new();
-        let read = read_line();
+        let read = read_string();
         cmd.push_str(&read);
 
         if cmd.is_empty() {

@@ -1,6 +1,6 @@
 extern crate alloc;
 
-use crate::drivers::keyboard::read_line;
+use crate::flib::read_line::read_string;
 use crate::utils::builtins::*;
 use crate::{print, println};
 use alloc::{str, string::String, vec::Vec};
@@ -14,7 +14,7 @@ pub fn main() -> ! {
     loop {
         print!("fsh> ");
 
-        let content = read_line();
+        let content = read_string();
 
         parse(content);
     }

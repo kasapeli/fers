@@ -6,7 +6,7 @@ use alloc::string::ToString;
 
 pub fn handle(content: &[&str]) {
     if content.len() == 1 {
-        println!("help, echo, reboot, ginfo, clear, panic, time, poke, peek");
+        println!("help, echo, reboot, ginfo, clear, panic, time, poke, peek, shed");
         println!("help -v <option> for verbose help");
     } else {
         match content[1] {
@@ -102,6 +102,15 @@ pub fn verbose_help(entry: &str) {
             let table = HelpTable {
                 name: "peek".to_string(),
                 info: "peeks at an address".to_string(),
+                flags: alloc::vec![],
+            };
+
+            println!("{}", table.make());
+        }
+        "shed" | "editor" => {
+            let table = HelpTable {
+                name: "shed".to_string(),
+                info: "SHitty EDitor".to_string(),
                 flags: alloc::vec![],
             };
 

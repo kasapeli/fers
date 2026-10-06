@@ -5,6 +5,7 @@
 mod arch;
 mod drivers;
 mod flib;
+mod fs;
 mod memory;
 mod utils;
 

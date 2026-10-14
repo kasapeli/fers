@@ -8,6 +8,8 @@ use alloc::{
 use super::presets::arg_err::*;
 use crate::{flib::read_line::read_string, print, println};
 
+use crate::drivers::vga::WRITER;
+
 pub struct Editor {
     storage: Vec<String>,
 }
@@ -185,9 +187,12 @@ pub fn cmd(editor: &mut Editor) {
                     println!("{}", invalid());
                 }
             }
+            "clear" | "c" => {
+                WRITER.lock().clear();
+            }
             "e" | "q" => break,
             _ => {
-                continue;
+                println!("?");
             }
         }
     }

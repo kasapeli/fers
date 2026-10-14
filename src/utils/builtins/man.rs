@@ -7,6 +7,7 @@ pub fn handle(content: &[&str]) {
         println!("{}", missing(1));
     } else {
         match content[1] {
+            "shed" => {} // think of a design for this
             "help" => {}
             _ => println!("{}", invalid()),
         }
